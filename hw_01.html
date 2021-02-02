@@ -382,6 +382,19 @@ summary {
 <div id="task-1" class="section level2">
 <h2>Task 1</h2>
 <pre class="r"><code>mh_distance &lt;- function(x, y) {
+  
+#Create a list of x and y
+  x_char &lt;- unlist(strsplit(as.character(x), NULL))
+  y_char &lt;- unlist(strsplit(as.character(y), NULL))
+  
+  #If numeric then take the absolute value
+  if (is.numeric(x) &amp; is.numeric(y)) {
+    x_pos &lt;- abs(x)
+    y_pos &lt;- abs(y)
+    x_char &lt;- unlist(strsplit(as.character(x_pos), NULL))
+    y_char &lt;- unlist(strsplit(as.character(y_pos), NULL))
+  }
+  
  # Check Inputs
   #Both same types
   if (typeof(x) != typeof(y)) {
@@ -399,8 +412,6 @@ summary {
   
   #Decimals
   if ( is.numeric(x) &amp; is.numeric(y)) {
-  x_char &lt;- unlist(strsplit(as.character(x), NULL))
-  y_char &lt;- unlist(strsplit(as.character(y), NULL))
     for(i in x_char) {
       if (i == &quot;.&quot;) {
         warning(&quot;x contains decimal values&quot;)
@@ -429,7 +440,24 @@ summary {
 
   
 #Run Calculations
+  #Character or Numeric
+  if ((is.character(x) &amp; is.character(y)) || (is.numeric(x) &amp; is.numeric(y))) {
+    count &lt;- 0
+    i &lt;- 1
+      while(i &lt;= length(x_char)) {
+      if (x_char[i] != y_char[i]) {
+        count = count + 1
+      }
+        i &lt;- i + 1
+    }
+    return (count)
+  }
 
+  #Logical
+  if (is.logical(x) &amp; is.logical(y)) {
+    value &lt;- abs(x - y)
+      return (value)
+  }
   
 }</code></pre>
 </div>
@@ -437,12 +465,26 @@ summary {
 <h2>Task 2</h2>
 <p><i> Be sure to remove chunk option <code>eval=FALSE</code> in the below code chunks once you create <code>mh_distance()</code>. Do not include this italicized text in your final submission. </i></p>
 <p><strong>Initial test cases</strong> (return a non-negative modified Hamming distance)</p>
-<pre class="r"><code>mh_distance(x = &quot;abc&quot;, y = &quot;abc&quot;)
-mh_distance(x = T, y = FALSE)
-mh_distance(x = &quot;523890&quot;, y = &quot;752839&quot;)
-mh_distance(x = 2341, y = 2350)</code></pre>
+<pre class="r"><code>mh_distance(x = &quot;abc&quot;, y = &quot;abc&quot;)</code></pre>
+<pre><code>[1] 0</code></pre>
+<pre class="r"><code>mh_distance(x = T, y = FALSE)</code></pre>
+<pre><code>[1] 1</code></pre>
+<pre class="r"><code>mh_distance(x = &quot;523890&quot;, y = &quot;752839&quot;)</code></pre>
+<pre><code>[1] 5</code></pre>
+<pre class="r"><code>mh_distance(x = 2341, y = 2350)</code></pre>
+<pre><code>[1] 2</code></pre>
 <p>Added test cases that return a non-negative modified Hamming distance result.</p>
-<pre class="r"><code># additional test cases go here</code></pre>
+<pre class="r"><code># additional test cases go here
+mh_distance(x = FALSE, y = TRUE)</code></pre>
+<pre><code>[1] 1</code></pre>
+<pre class="r"><code>mh_distance(x = &quot;cac&quot;, y = &quot;abc&quot;)</code></pre>
+<pre><code>[1] 2</code></pre>
+<pre class="r"><code>mh_distance(x = &quot;dog&quot;, y = &quot;dog&quot;)</code></pre>
+<pre><code>[1] 0</code></pre>
+<pre class="r"><code>mh_distance(x = -5, y = 5) #Still not working!!! with negative numbers</code></pre>
+<pre><code>Warning in mh_distance(x = -5, y = 5): x and y do not have the same number of
+digits or letters</code></pre>
+<pre><code>[1] -1</code></pre>
 <p><strong>Initial test cases</strong> (return values of <code>-1</code>)</p>
 <pre class="r"><code>mh_distance(x = 52, y = 113)
 mh_distance(x = &quot;swimming&quot;, y = &quot;winning&quot;)
