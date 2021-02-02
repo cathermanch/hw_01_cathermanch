@@ -12,9 +12,55 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ## Task 1
 
 ```{r mh_distance_function}
-mh_distance <- function() {
+mh_distance <- function(x, y) {
+ # Check Inputs
+  #Both same types
+  if (typeof(x) != typeof(y)) {
+  warning("x and y are not both logical, numeric, or characters")
+  return(-1)
+  }
   
-  # body of your function goes here...
+  # Same Length
+  if (typeof(x) != "logical" & typeof(y) != "logical") {
+  if (nchar(x) != nchar(y)) {
+  warning("x and y do not have the same number of digits or letters")
+  return(-1)
+  }
+  }
+  
+  #Decimals
+  if ( is.numeric(x) & is.numeric(y)) {
+  x_char <- unlist(strsplit(as.character(x), NULL))
+  y_char <- unlist(strsplit(as.character(y), NULL))
+    for(i in x_char) {
+      if (i == ".") {
+        warning("x contains decimal values")
+    return (-1)
+      }
+    }
+  
+   for(l in y_char) {
+      if (l == ".") {
+        warning("y contains decimal values")
+    return (-1)
+      }
+    }
+  }
+  
+  #NA, NaN, Inf or -Inf
+  if (is.infinite(x) | is.nan(x) | is.na(x)) {
+  warning("x is NA, NaN, Inf or -Inf")
+  return(-1)
+    }
+  
+  if (is.infinite(y) | is.nan(y) | is.na(y)) {
+  warning("y is NA, NaN, Inf or -Inf")
+  return(-1)
+   }
+
+  
+#Run Calculations
+
   
 }
 ```
@@ -30,7 +76,7 @@ text in your final submission.
 
 **Initial test cases** (return a non-negative modified Hamming distance)
 
-```{r eval=FALSE}
+```{r}
 mh_distance(x = "abc", y = "abc")
 mh_distance(x = T, y = FALSE)
 mh_distance(x = "523890", y = "752839")
@@ -41,6 +87,7 @@ Added test cases that return a non-negative modified Hamming distance result.
 
 ```{r}
 # additional test cases go here
+
 ```
 
 **Initial test cases** (return values of `-1`)
@@ -56,6 +103,14 @@ Added test cases that return a value of `-1`.
 
 ```{r}
 # additional test cases go here
+mh_distance(x = TRUE, y = 2.5)
+mh_distance(x = 5, y = "cac")
+mh_distance(x = "cac", y = 2)
+mh_distance(x = "cac", y = "christine")
+mh_distance(x = 123, y = 2)
+mh_distance(x = Inf, y = 500)
+mh_distance(x = FALSE, y = NA)
+mh_distance(x = 671, y = 5.3)
 ```
 
 
@@ -70,6 +125,7 @@ w <- c(22, 50000, 451.00, 88, 0)
 
 ```{r}
 # loop goes here
+
 ```
 
 

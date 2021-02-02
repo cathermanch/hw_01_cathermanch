@@ -381,9 +381,55 @@ summary {
 
 <div id="task-1" class="section level2">
 <h2>Task 1</h2>
-<pre class="r"><code>mh_distance &lt;- function() {
+<pre class="r"><code>mh_distance &lt;- function(x, y) {
+ # Check Inputs
+  #Both same types
+  if (typeof(x) != typeof(y)) {
+  warning(&quot;x and y are not both logical, numeric, or characters&quot;)
+  return(-1)
+  }
   
-  # body of your function goes here...
+  # Same Length
+  if (typeof(x) != &quot;logical&quot; &amp; typeof(y) != &quot;logical&quot;) {
+  if (nchar(x) != nchar(y)) {
+  warning(&quot;x and y do not have the same number of digits or letters&quot;)
+  return(-1)
+  }
+  }
+  
+  #Decimals
+  if ( is.numeric(x) &amp; is.numeric(y)) {
+  x_char &lt;- unlist(strsplit(as.character(x), NULL))
+  y_char &lt;- unlist(strsplit(as.character(y), NULL))
+    for(i in x_char) {
+      if (i == &quot;.&quot;) {
+        warning(&quot;x contains decimal values&quot;)
+    return (-1)
+      }
+    }
+  
+   for(l in y_char) {
+      if (l == &quot;.&quot;) {
+        warning(&quot;y contains decimal values&quot;)
+    return (-1)
+      }
+    }
+  }
+  
+  #NA, NaN, Inf or -Inf
+  if (is.infinite(x) | is.nan(x) | is.na(x)) {
+  warning(&quot;x is NA, NaN, Inf or -Inf&quot;)
+  return(-1)
+    }
+  
+  if (is.infinite(y) | is.nan(y) | is.na(y)) {
+  warning(&quot;y is NA, NaN, Inf or -Inf&quot;)
+  return(-1)
+   }
+
+  
+#Run Calculations
+
   
 }</code></pre>
 </div>
@@ -403,7 +449,36 @@ mh_distance(x = &quot;swimming&quot;, y = &quot;winning&quot;)
 mh_distance(x = NA, y = TRUE)
 mh_distance(x = 1.5, y = 2.5)</code></pre>
 <p>Added test cases that return a value of <code>-1</code>.</p>
-<pre class="r"><code># additional test cases go here</code></pre>
+<pre class="r"><code># additional test cases go here
+mh_distance(x = TRUE, y = 2.5)</code></pre>
+<pre><code>Warning in mh_distance(x = TRUE, y = 2.5): x and y are not both logical,
+numeric, or characters</code></pre>
+<pre><code>[1] -1</code></pre>
+<pre class="r"><code>mh_distance(x = 5, y = &quot;cac&quot;)</code></pre>
+<pre><code>Warning in mh_distance(x = 5, y = &quot;cac&quot;): x and y are not both logical, numeric,
+or characters</code></pre>
+<pre><code>[1] -1</code></pre>
+<pre class="r"><code>mh_distance(x = &quot;cac&quot;, y = 2)</code></pre>
+<pre><code>Warning in mh_distance(x = &quot;cac&quot;, y = 2): x and y are not both logical, numeric,
+or characters</code></pre>
+<pre><code>[1] -1</code></pre>
+<pre class="r"><code>mh_distance(x = &quot;cac&quot;, y = &quot;christine&quot;)</code></pre>
+<pre><code>Warning in mh_distance(x = &quot;cac&quot;, y = &quot;christine&quot;): x and y do not have the same
+number of digits or letters</code></pre>
+<pre><code>[1] -1</code></pre>
+<pre class="r"><code>mh_distance(x = 123, y = 2)</code></pre>
+<pre><code>Warning in mh_distance(x = 123, y = 2): x and y do not have the same number of
+digits or letters</code></pre>
+<pre><code>[1] -1</code></pre>
+<pre class="r"><code>mh_distance(x = Inf, y = 500)</code></pre>
+<pre><code>Warning in mh_distance(x = Inf, y = 500): x is NA, NaN, Inf or -Inf</code></pre>
+<pre><code>[1] -1</code></pre>
+<pre class="r"><code>mh_distance(x = FALSE, y = NA)</code></pre>
+<pre><code>Warning in mh_distance(x = FALSE, y = NA): y is NA, NaN, Inf or -Inf</code></pre>
+<pre><code>[1] -1</code></pre>
+<pre class="r"><code>mh_distance(x = 671, y = 5.3)</code></pre>
+<pre><code>Warning in mh_distance(x = 671, y = 5.3): y contains decimal values</code></pre>
+<pre><code>[1] -1</code></pre>
 </div>
 <div id="task-3" class="section level2">
 <h2>Task 3</h2>
