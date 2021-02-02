@@ -15,69 +15,66 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA)
 mh_distance <- function(x, y) {
   
 #Create vectors of x and y
-  x_char <- unlist(strsplit(as.character(x), NULL))
-  y_char <- unlist(strsplit(as.character(y), NULL))
+x_vec <- unlist(strsplit(as.character(x), NULL))
+y_vec <- unlist(strsplit(as.character(y), NULL))
   
-  #If numeric then take the absolute value
-  if (is.numeric(x) & is.numeric(y)) {
-    x_char <- unlist(strsplit(as.character(abs(x)), NULL))
-    y_char <- unlist(strsplit(as.character(abs(y)), NULL))
-  }
+ #If numeric then take the absolute value
+if (is.numeric(x) & is.numeric(y)) {
+  x_vec <- unlist(strsplit(as.character(abs(x)), NULL))
+  y_vec <- unlist(strsplit(as.character(abs(y)), NULL))
+}
   
- # Check Inputs
+# Check Inputs
   #Both same types
-  if (mode(x) != mode(y)) {
+if (mode(x) != mode(y)) {
   warning("x and y are not both logical, numeric, or characters")
   return(-1)
-  }
+}
   
   # Same Length
-  if (typeof(x) != "logical" & typeof(y) != "logical") {
-  if (length(x_char) != length(y_char)) {
-  warning("x and y do not have the same number of digits or letters")
-  return(-1)
+if (typeof(x) != "logical" & typeof(y) != "logical") {
+  if (length(x_vec) != length(y_vec)) {
+    warning("x and y do not have the same number of digits or letters")
+    return(-1)
   }
-  }
+}
   
-  #NA, NaN, Inf or -Inf
-  if (is.infinite(x) | is.nan(x) | is.na(x) || 
-      is.infinite(y) | is.nan(y) | is.na(y)) {
+#NA, NaN, Inf or -Inf
+if (is.infinite(x) | is.nan(x) | is.na(x) ||
+    is.infinite(y) | is.nan(y) | is.na(y)) {
   warning("x is NA, NaN, Inf or -Inf")
   return(-1)
-    }
+}
 
-  #Decimals (fraction)
-  if ( is.numeric(x) & is.numeric(y)) {
-    if (x %% 1 != 0 || y %% 1 != 0) {
-      warning("x or y contain decimal values")
+#Decimals (fraction)
+if ( is.numeric(x) & is.numeric(y)) {
+  if (x %% 1 != 0 || y %% 1 != 0) {
+    warning("x or y contain decimal values")
     return (-1)
-    }
   }
+}
   
   
 #Run Calculations
   #Character or Numeric
-  if ((is.character(x) & is.character(y)) || (is.numeric(x) & is.numeric(y))) {
-    count <- 0
-    i <- 1
-      while(i <= length(x_char)) {
-      if (x_char[i] != y_char[i]) {
-        count = count + 1
+if ((is.character(x) & is.character(y)) || (is.numeric(x) & is.numeric(y))) {
+  count <- 0
+  i <- 1
+  while(i <= length(x_vec)) {
+    if (x_vec[i] != y_vec[i]) {
+      count = count + 1
       }
-        i <- i + 1
-    }
-    return (count)
+    i <- i + 1
   }
-
-  #Logical
-  else if (is.logical(x) & is.logical(y)) {
-    value <- abs(x - y)
-      return (value)
-  }
-  
-  else{
-    warning("x and y are not both logical, numeric, or characters")
-  }
+  return (count)
+#Logical
+} else if (is.logical(x) & is.logical(y)) {
+  logic_value <- abs(x - y)
+  return (logic_value)
+#Warn about any other types that are inputs
+} else {
+      warning("x and y are not both logical, numeric, or characters")
+}
   
 }
 ```
@@ -85,15 +82,9 @@ mh_distance <- function(x, y) {
 
 ## Task 2
 
-<i>
-Be sure to remove chunk option `eval=FALSE` in the below code chunks
-once you create `mh_distance()`. Do not include this italicized
-text in your final submission.
-</i>
-
 **Initial test cases** (return a non-negative modified Hamming distance)
 
-```{r}
+```{r mh_distance_pos_tests}
 mh_distance(x = "abc", y = "abc")
 mh_distance(x = T, y = FALSE)
 mh_distance(x = "523890", y = "752839")
@@ -102,7 +93,7 @@ mh_distance(x = 2341, y = 2350)
 
 Added test cases that return a non-negative modified Hamming distance result.
 
-```{r}
+```{r mh_distance_pos_tests_add}
 # additional test cases go here
 mh_distance(x = FALSE, y = TRUE)
 mh_distance(x = "cac", y = "abc")
@@ -114,7 +105,7 @@ mh_distance(x = 5L, y = 7)
 
 **Initial test cases** (return values of `-1`)
 
-```{r eval=FALSE}
+```{r mh_distance_neg_tests}
 mh_distance(x = 52, y = 113)
 mh_distance(x = "swimming", y = "winning")
 mh_distance(x = NA, y = TRUE)
@@ -123,7 +114,7 @@ mh_distance(x = 1.5, y = 2.5)
 
 Added test cases that return a value of `-1`.
 
-```{r}
+```{r mh_distance_neg_tests_add}
 # additional test cases go here
 mh_distance(x = TRUE, y = 2.5)
 mh_distance(x = 5, y = "cac")
@@ -140,19 +131,19 @@ mh_distance(x = 671, y = 5.3)
 
 Consider the pair of vectors `s` and `w` given below.
 
-```{r}
+```{r vector_pairs}
 s <- c(26, 50123, 456.12, 8, 0)
 w <- c(22, 50000, 451.00, 88, 0)
 ```
 
-```{r, warning= FALSE}
+```{r mh_distance_loop, warning= FALSE}
 # loop goes here
 i <- 1
-while(i <= length(s)){
-  val <- mh_distance(s[i], w[i])
-  
-  if (val >= 0) {
-  print(paste0("The modified Hamming distance between ", s[i], " and ", w[i], " is ", val))
+while(i <= length(s)) {
+  h_dist <- mh_distance(s[i], w[i])
+  if (h_dist >= 0) {
+    print(paste0("The modified Hamming distance between ", s[i], " and ",
+               w[i], " is ", h_dist))
   }
   i <- i + 1
 }
@@ -164,21 +155,77 @@ while(i <= length(s)){
 
 -How I handled possible invalid inputs:
 
-I first started going through the list and creating if statements for each of the different invalid input cases. However, I ended up switching the order of the NA, NaN, Inf or -Inf to go before the decimal check because some of those cases are numeric and would produce results that would not work well in that code chunk if those inputs were passed through. I made sure that if the modes of x and y were not the same then it would produce the appropriate warning message to ensure both x and y were the same type. Then I checked the length for the non-logical variables by first creating new variables that were the vectors of the inputs split into the individual character components using strsplit. I did also make a special case for numeric inputs to make sure to take the absolute value before doing this, so it would have the correct length to compare and produce the appropriate warning message if they were not the same length. For NA, NaN, Inf or -Inf if just checked if x and y were each of those type and if so then it will issue the appropriate warning message. Lastly, for decimals, I made sure the inputs were numeric then did mod 1 to make sure that numbers with decimals that contained numbers other than 0 were weeded out by issuing the appropriate warning message.
+I first started going through the list and creating if statements for each of 
+the different invalid input cases. However, I ended up switching the order of 
+the NA, NaN, Inf or -Inf to go before the decimal check because some of those 
+cases are numeric and would produce results that would not work well in that 
+code chunk if those inputs were passed through. I made sure that if the modes 
+of x and y were not the same then it would produce the appropriate warning 
+message to ensure both x and y were the same type. Then I checked the length of
+the non-logical variables by first creating new variables that were the vectors 
+of the inputs split into the individual character components using strsplit. I 
+did also make a special case for numeric inputs to make sure to take the 
+absolute  value before doing this, so it would have the correct length to 
+compare and produce the appropriate warning message if they were not the same 
+length. For NA, NaN, Inf or -Inf if just checked if x and y were each of those 
+type and if  so then it will issue the appropriate warning message. Lastly, for 
+decimals, I made sure the inputs were numeric then did mod 1 to make sure that 
+numbers with decimals that contained numbers other than 0 were weeded out by 
+issuing the appropriate warning message.
 
 -Explanation of code choices:
 
-I first started making if statements for all of the invalid inputs to be tested, then I went into calculating the values based on the different type of input. 
-For each of the possible invalid cases I made separate if statements so the could would be easy to follow and not get too confusing since they are each somewhat separate from each other.
-As mentioned above, in order to run some of these invalid cases, like length, I had to first create a vector of each of the inputs' individual characters so I could compare the lengths and eventually the values of the characters when doing the actual calculations. To create these vectors I made sure that x and y were treated as characters then used strsplit to seperate them to make vectors that could be used to compare the different elements. However, for numeric inputs if first made sure to take the absolute value of these inputs before doing so to ensure that negative numbers were handled appropriately. 
-Then for the actual calculation of the Hamming distance, I used an if, else if, and else statement. This is because this code chunk is more related, and it made since to calculate the numeric and character Hamming distance together and the logical Hamming distance separately because they involve different methods for calculation. I also added a else statement as an easy catch-all in case some other type of input was entered that is not numeric, character, or logical without having to add too much extra code.
-To actually calculate the Hamming distance, within the if statement I created a while loop to compare each of the characters of x and y together, from the vector created earlier, in order to see if they were the different, and if they were then I increased the count, which is the Hamming distance each time that was observed for all of the characters in x and y. This way once the code was finished looping through the vector the count could be properly reported for the Hamming distance. To calculate the Hamming distance for logical types I subtracted the logical inputs from each other because they are convertert to 1 or 0, so if there was a non-zero result then the logical inputs are different and 1 would be returned.
+I first started making if statements for all of the invalid inputs to be 
+tested, then I went into calculating the values based on the different type 
+of input. 
+For each of the possible invalid cases I made separate if statements so the 
+could would be easy to follow and not get too confusing since they are each 
+somewhat separate from each other.
+As mentioned above, in order to run some of these invalid cases, like length, 
+I had to first create a vector of each of the inputs' individual characters so 
+I could compare the lengths and eventually the values of the characters when 
+doing the actual calculations. To create these vectors I made sure that x and y
+were treated as characters then used strsplit to seperate them to make vectors 
+that could be used to compare the different elements. However, for numeric 
+inputs if first made sure to take the absolute value of these inputs before 
+doing so to ensure that negative numbers were handled appropriately. 
+Then for the actual calculation of the Hamming distance, I used an if, else if,
+and else statement. This is because this code chunk is more related, and it 
+made since to calculate the numeric and character Hamming distance together and 
+the logical Hamming distance separately because they involve different methods 
+for calculation. I also added a else statement as an easy catch-all in case 
+some other type of input was entered that is not numeric, character, or logical 
+without having to add too much extra code.
+To actually calculate the Hamming distance, within the if statement I created a 
+while loop to compare each of the characters of x and y together, from the 
+vector created earlier, in order to see if they were the different, and if they 
+were then I increased the count, which is the Hamming distance each time that 
+was observed for all of the characters in x and y. This way once the code was 
+finished looping through the vector the count could be properly reported for 
+the Hamming distance. To calculate the Hamming distance for logical types I 
+subtracted the logical inputs from each other because they are converted to 1 
+or 0, so if there was a non-zero result then the logical inputs are different 
+and 1 would be returned.
 
 -Weaknesses with my code and resulting function:
 
-The main weaknesses in my code would are probably just from not using the most efficient code because I am a little rusty in R or if I did think of a better way to code something I had already done most of the work or had issues when I tried to reduce the total code that was needed.
-For some of my checks, such as NA, NaN, Inf or -Inf, I went through all of the invalid statements for both x and y within the if statement, but I probably could have used a for loop outside of the if statement with a list of x and y and
-checked both to help have less semi-repetitive code overall. I didn't really think of this until after the fact, but when first attempting this it was simpler for me to just copy, paste, and alter the code than to create a for loop.
-Another weakness of my code in task 1 is that for the very beginning when I first created the vectors for x and y I probably should have used an if and else if statement instead of just writing the code and then an if statement with the exception to that code. I didn't initially do this because I had not considered negative numeric values, so instead of altering what I had already done I had created a new if statement because it was simpler for me.
+The main weaknesses in my code would are probably just from not using the most 
+efficient code because I am a little rusty in R or if I did think of a better 
+way to code something I had already done most of the work or had issues when I 
+tried to reduce the total code that was needed.
+For some of my checks, such as NA, NaN, Inf or -Inf, I went through all of the 
+invalid statements for both x and y within the if statement, but I probably 
+could have used a for loop outside of the if statement with a list of x and y 
+and
+checked both to help have less semi-repetitive code overall. I didn't really 
+think of this until after the fact, but when first attempting this it was 
+simpler for me to just copy, paste, and alter the code than to create a for 
+loop.
+Another weakness of my code in task 1 is that for the very beginning when I 
+first created the vectors for x and y I probably should have used an if and 
+else if statement instead of just writing the code and then an if statement 
+with the exception to that code. I didn't initially do this because I had not 
+considered negative numeric values, so instead of altering what I had already 
+done I had created a new if statement because it was simpler for me.
 
 
