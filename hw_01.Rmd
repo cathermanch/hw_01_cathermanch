@@ -28,35 +28,19 @@ mh_distance <- function(x, y) {
   
  # Check Inputs
   #Both same types
-  if (typeof(x) != typeof(y)) {
+  if (mode(x) != mode(y)) {
   warning("x and y are not both logical, numeric, or characters")
   return(-1)
   }
   
   # Same Length
   if (typeof(x) != "logical" & typeof(y) != "logical") {
-  if (nchar(x) != nchar(y)) {
+  if (length(x_char) != length(y_char)) {
   warning("x and y do not have the same number of digits or letters")
   return(-1)
   }
   }
   
-  #Decimals
-  if ( is.numeric(x) & is.numeric(y)) {
-    for(i in x_char) {
-      if (i == ".") {
-        warning("x contains decimal values")
-    return (-1)
-      }
-    }
-  
-   for(l in y_char) {
-      if (l == ".") {
-        warning("y contains decimal values")
-    return (-1)
-      }
-    }
-  }
   
   #NA, NaN, Inf or -Inf
   if (is.infinite(x) | is.nan(x) | is.na(x)) {
@@ -69,6 +53,13 @@ mh_distance <- function(x, y) {
   return(-1)
    }
 
+  #Decimals (fraction)
+  if ( is.numeric(x) & is.numeric(y)) {
+    if (x %% 1 != 0 || y %% 1 != 0) {
+      warning("x or y contain decimal values")
+    return (-1)
+    }
+  }
   
 #Run Calculations
   #Character or Numeric
@@ -118,7 +109,9 @@ Added test cases that return a non-negative modified Hamming distance result.
 mh_distance(x = FALSE, y = TRUE)
 mh_distance(x = "cac", y = "abc")
 mh_distance(x = "dog", y = "dog")
-mh_distance(x = -5, y = 5) #Still not working!!! with negative numbers
+mh_distance(x = -5, y = 5)
+mh_distance(x = 5L, y = 7)
+
 ```
 
 **Initial test cases** (return values of `-1`)
@@ -154,8 +147,17 @@ s <- c(26, 50123, 456.12, 8, 0)
 w <- c(22, 50000, 451.00, 88, 0)
 ```
 
-```{r}
+```{r, warning= FALSE}
 # loop goes here
+i <- 1
+while(i <= length(s)){
+  val <- mh_distance(s[i], w[i])
+  
+  if (val >= 0) {
+  print(paste0("The modified Hamming distance between ", s[i], " and ", w[i], " is ", val))
+  }
+  i <- i + 1
+}
 
 ```
 

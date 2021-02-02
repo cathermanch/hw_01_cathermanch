@@ -397,35 +397,19 @@ summary {
   
  # Check Inputs
   #Both same types
-  if (typeof(x) != typeof(y)) {
+  if (mode(x) != mode(y)) {
   warning(&quot;x and y are not both logical, numeric, or characters&quot;)
   return(-1)
   }
   
   # Same Length
   if (typeof(x) != &quot;logical&quot; &amp; typeof(y) != &quot;logical&quot;) {
-  if (nchar(x) != nchar(y)) {
+  if (length(x_char) != length(y_char)) {
   warning(&quot;x and y do not have the same number of digits or letters&quot;)
   return(-1)
   }
   }
   
-  #Decimals
-  if ( is.numeric(x) &amp; is.numeric(y)) {
-    for(i in x_char) {
-      if (i == &quot;.&quot;) {
-        warning(&quot;x contains decimal values&quot;)
-    return (-1)
-      }
-    }
-  
-   for(l in y_char) {
-      if (l == &quot;.&quot;) {
-        warning(&quot;y contains decimal values&quot;)
-    return (-1)
-      }
-    }
-  }
   
   #NA, NaN, Inf or -Inf
   if (is.infinite(x) | is.nan(x) | is.na(x)) {
@@ -438,6 +422,13 @@ summary {
   return(-1)
    }
 
+  #Decimals (fraction)
+  if ( is.numeric(x) &amp; is.numeric(y)) {
+    if (x %% 1 != 0 || y %% 1 != 0) {
+      warning(&quot;x or y contain decimal values&quot;)
+    return (-1)
+    }
+  }
   
 #Run Calculations
   #Character or Numeric
@@ -481,10 +472,10 @@ mh_distance(x = FALSE, y = TRUE)</code></pre>
 <pre><code>[1] 2</code></pre>
 <pre class="r"><code>mh_distance(x = &quot;dog&quot;, y = &quot;dog&quot;)</code></pre>
 <pre><code>[1] 0</code></pre>
-<pre class="r"><code>mh_distance(x = -5, y = 5) #Still not working!!! with negative numbers</code></pre>
-<pre><code>Warning in mh_distance(x = -5, y = 5): x and y do not have the same number of
-digits or letters</code></pre>
-<pre><code>[1] -1</code></pre>
+<pre class="r"><code>mh_distance(x = -5, y = 5)</code></pre>
+<pre><code>[1] 0</code></pre>
+<pre class="r"><code>mh_distance(x = 5L, y = 7)</code></pre>
+<pre><code>[1] 1</code></pre>
 <p><strong>Initial test cases</strong> (return values of <code>-1</code>)</p>
 <pre class="r"><code>mh_distance(x = 52, y = 113)
 mh_distance(x = &quot;swimming&quot;, y = &quot;winning&quot;)
@@ -519,7 +510,7 @@ digits or letters</code></pre>
 <pre><code>Warning in mh_distance(x = FALSE, y = NA): y is NA, NaN, Inf or -Inf</code></pre>
 <pre><code>[1] -1</code></pre>
 <pre class="r"><code>mh_distance(x = 671, y = 5.3)</code></pre>
-<pre><code>Warning in mh_distance(x = 671, y = 5.3): y contains decimal values</code></pre>
+<pre><code>Warning in mh_distance(x = 671, y = 5.3): x or y contain decimal values</code></pre>
 <pre><code>[1] -1</code></pre>
 </div>
 <div id="task-3" class="section level2">
@@ -527,7 +518,19 @@ digits or letters</code></pre>
 <p>Consider the pair of vectors <code>s</code> and <code>w</code> given below.</p>
 <pre class="r"><code>s &lt;- c(26, 50123, 456.12, 8, 0)
 w &lt;- c(22, 50000, 451.00, 88, 0)</code></pre>
-<pre class="r"><code># loop goes here</code></pre>
+<pre class="r"><code># loop goes here
+i &lt;- 1
+while(i &lt;= length(s)){
+  val &lt;- mh_distance(s[i], w[i])
+  
+  if (val &gt;= 0) {
+  print(paste0(&quot;The modified Hamming distance between &quot;, s[i], &quot; and &quot;, w[i], &quot; is &quot;, val))
+  }
+  i &lt;- i + 1
+}</code></pre>
+<pre><code>[1] &quot;The modified Hamming distance between 26 and 22 is 1&quot;
+[1] &quot;The modified Hamming distance between 50123 and 50000 is 3&quot;
+[1] &quot;The modified Hamming distance between 0 and 0 is 0&quot;</code></pre>
 </div>
 <div id="task-4" class="section level2">
 <h2>Task 4</h2>
